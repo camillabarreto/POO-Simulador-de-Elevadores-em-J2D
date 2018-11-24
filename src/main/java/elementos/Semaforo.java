@@ -3,7 +3,7 @@ package elementos;
 import gui.Tela;
 
 /**
- * Um exemplo de como fazer um elemento que atualiza constantemente sem a necessidade de interação com o usuário
+ * Um auxiliar de como fazer um elemento que atualiza constantemente sem a necessidade de interação com o usuário
  *
  * @author Emerson Ribeiro de Mello - 2018
  */

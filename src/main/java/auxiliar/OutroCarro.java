@@ -1,4 +1,4 @@
-package exemplo;
+package auxiliar;
 
 import elementos.Elemento;
 import gui.Tela;

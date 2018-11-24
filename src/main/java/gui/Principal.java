@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Esse é um esqueleto (feito com IntelliJ 2018.3 + gradle) para indicar como fazer uma aplicação gráfica com
  * uma lógica de atualização semelhante a um jogo em J2D.
  *
- * Nesse projeto também um exemplo de como criar uma Thread específica para atualizar as coordenadas de um elemento
+ * Nesse projeto também um auxiliar de como criar uma Thread específica para atualizar as coordenadas de um elemento
  * gráfico que depois é redesenhado periodicamente pelo Timer que está associado a área de desenho (Tela)
  *
  * @author Emerson Ribeiro de Mello - 2018
@@ -91,7 +91,7 @@ public class Principal {
         });
 
         /**
-         * Um pequeno exemplo de como um componente da JPanel principal poderia invocar
+         * Um pequeno auxiliar de como um componente da JPanel principal poderia invocar
          * objetos que estão contidos dentro da Tela
          *
          */
@@ -112,7 +112,7 @@ public class Principal {
         });
 
         /**
-         * Um pequeno exemplo para verificar se o usuário clicou sobre um Elemento que está desenhado na tela.
+         * Um pequeno auxiliar para verificar se o usuário clicou sobre um Elemento que está desenhado na tela.
          *
          * No caso, é verificado se as coordenadas do clique (x,y), estão dentro da área retangular do elemento
          */

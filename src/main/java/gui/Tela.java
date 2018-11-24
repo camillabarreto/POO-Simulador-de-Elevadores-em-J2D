@@ -3,8 +3,8 @@ package gui;
 import elementos.Carro;
 import elementos.Elemento;
 import elementos.Semaforo;
-import exemplo.ExemploDeThread;
-import exemplo.OutroCarro;
+import auxiliar.ExemploDeThread;
+import auxiliar.OutroCarro;
 import util.Teclado;
 
 import javax.swing.*;
@@ -65,7 +65,7 @@ public class Tela extends JPanel implements ActionListener {
 
 
     /**
-     * Aqui são criados 3 elementos de exemplo. Cada elemento é de uma subclasse distinta
+     * Aqui são criados 3 elementos de auxiliar. Cada elemento é de uma subclasse distinta
      */
     public void criarElementos(){
 
@@ -131,7 +131,7 @@ public class Tela extends JPanel implements ActionListener {
         // atualizando as coordenadas manualmente
         elementos.forEach(elemento -> {
 
-            // A ideia desse exemplo é que o OutroCarro
+            // A ideia desse auxiliar é que o OutroCarro
             // seja atualizado por uma outra thread e não por aqui.
             if (!(elemento instanceof OutroCarro)) {
 
@@ -169,7 +169,7 @@ public class Tela extends JPanel implements ActionListener {
 
 
     /**
-     * O cenário de fundo tem elementos estáticos. Aqui um pequeno exemplo de como desenhar retângulo,
+     * O cenário de fundo tem elementos estáticos. Aqui um pequeno auxiliar de como desenhar retângulo,
      * mas é possível desenhar imagens, elipse, string, etc.
      *
      */

@@ -1,11 +1,11 @@
-package exemplo;
+package auxiliar;
 
 import elementos.Elemento;
 import gui.Tela;
 
 /**
  *
- * Um exemplo de como seria possível atualizar as coordenadas de um elemento por uma outra Thread
+ * Um auxiliar de como seria possível atualizar as coordenadas de um elemento por uma outra Thread
  *
  * @author Emerson Ribeiro de Mello - 2018
  */
