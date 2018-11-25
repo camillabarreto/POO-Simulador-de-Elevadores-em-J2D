@@ -1,8 +1,8 @@
 package gui;
 
-import elementos.Carro;
-import elementos.Elemento;
-import elementos.Semaforo;
+import auxiliar.Sistema;
+import com.sun.org.apache.xpath.internal.operations.And;
+import elementos.*;
 import auxiliar.ExemploDeThread;
 import auxiliar.OutroCarro;
 import util.Teclado;
@@ -34,6 +34,7 @@ public class Tela extends JPanel implements ActionListener {
 
     // Elementos que serão desenhados na tela
     private ArrayList<Elemento> elementos;
+    private Sistema sistema;
 
 
     // Exemplo de uma Thread. Essa Thread será responsável por atualizar as coordenadas de um elemento específico
@@ -69,19 +70,34 @@ public class Tela extends JPanel implements ActionListener {
      */
     public void criarElementos(){
 
-        // Limpando o ArrayList
         elementos.clear();
 
-        // Adicionando um Carro e um Semáforo
-        elementos.add(new Carro(this,"carrov.png",100,400));
-        elementos.add(new Semaforo(this, "traffic.png", 10, 50));
+        ArrayList<Andar> andares = new ArrayList<>();
+        andares.add(new Andar(this, "traffic.png", 10, 0, 5));
+        andares.add(new Andar(this, "traffic.png", 10, 100, 4));
+        andares.add(new Andar(this, "traffic.png", 10, 200, 3));
+        andares.add(new Andar(this, "traffic.png", 10, 300, 2));
+        andares.add(new Andar(this, "traffic.png", 10, 400, 1));
+        andares.add(new Andar(this, "traffic.png", 10, 500, 0));
 
-        // Esse mesmo objeto é adicionado no ArrayList e é enviado para a Thread que será responsável por
-        // atualizar suas coordenadas
-        OutroCarro outroCarro = new OutroCarro(this,"azul.png",300,10);
+        ArrayList<Elevador> elevadores = new ArrayList<>();
+        elevadores.add(new Elevador(this, "carrov.png", 100, 400, 1, 8));
+        elevadores.add(new Elevador(this, "carrov.png", 150, 400, 1, 8));
+        elevadores.add(new Elevador(this, "carrov.png", 200, 400, 1, 8));
 
-        elementos.add(outroCarro);
-        this.atualizaUmCarroViaThread = new ExemploDeThread(outroCarro, this);
+        sistema = new Sistema(5, "arquivo", elevadores, andares);
+
+
+//        // Adicionando um Carro e um Semáforo
+//        elementos.add(new Carro(this,"carrov.png",100,400));
+//        elementos.add(new Semaforo(this, "traffic.png", 10, 50));
+//
+//        // Esse mesmo objeto é adicionado no ArrayList e é enviado para a Thread que será responsável por
+//        // atualizar suas coordenadas
+//        OutroCarro outroCarro = new OutroCarro(this,"azul.png",300,10);
+//
+//        elementos.add(outroCarro);
+//        this.atualizaUmCarroViaThread = new ExemploDeThread(outroCarro, this);
 
     }
 
@@ -100,7 +116,7 @@ public class Tela extends JPanel implements ActionListener {
         this.timer.start();
 
         // disparando Thread que ficará atualizando atributos de um elemento específico
-        atualizaUmCarroViaThread.start();
+        //atualizaUmCarroViaThread.start();
     }
 
 
@@ -112,10 +128,13 @@ public class Tela extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         // Verifica a situação das teclas (pressionadas, soltas, etc)
-        this.teclado.poll();
+        //this.teclado.poll();
 
         // Atualiza as coordenadas dos elementos, respeitando a lógica de cada um
-        this.processarLogica();
+        //this.processarLogica();
+
+        sistema.gerenciar();
+        sistema.atualizarElevadores();
 
         // desenha os elementos na tela novamente
         this.renderizar();
@@ -161,7 +180,13 @@ public class Tela extends JPanel implements ActionListener {
 
 
         // desenhando os elementos na tela
-        elementos.forEach(elemento -> elemento.desenhar(g2));
+        //elementos.forEach(elemento -> elemento.desenhar(g2));
+        sistema.getElevadores().forEach(elevador -> {
+            elevador.desenhar(g2);
+        });
+        sistema.getAndares().forEach(andar -> {
+            andar.desenhar(g2);
+        });
 
         //liberando os contextos gráficos
         g2.dispose();
@@ -198,7 +223,7 @@ public class Tela extends JPanel implements ActionListener {
         this.renderizar();
 
         // Interrompe a Thread que estava atualizando as coordenadas do OutroCarro
-        ((ExemploDeThread)this.atualizaUmCarroViaThread).setExecutando(false);
+        //((ExemploDeThread)this.atualizaUmCarroViaThread).setExecutando(false);
     }
 
 

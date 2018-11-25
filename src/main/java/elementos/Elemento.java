@@ -86,4 +86,7 @@ public abstract class Elemento {
         return iicon.getImage();
     }
 
+    public int getPosY() {
+        return posY;
+    }
 }
