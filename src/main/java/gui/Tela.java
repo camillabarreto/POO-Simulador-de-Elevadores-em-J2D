@@ -60,7 +60,7 @@ public class Tela extends JPanel implements ActionListener {
         this.taxaDeAtualizacao = 50;
 
         this.elementos = new ArrayList<>();
-        this.atualizaElevador = new Thread[3];
+        this.atualizaElevador = new Thread[2];
         // Criando os elementos que serão desenhados na tela
         //this.criarElementos();
         this.arquivoInsantes = "/home/camilla/Área de Trabalho/projeto-pratico-02-camillabarreto/src/main/java/util/arquivoInstantes.txt";
@@ -75,13 +75,13 @@ public class Tela extends JPanel implements ActionListener {
         elementos.clear();
         ArrayList<Andar> andares = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 30, i);
+            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 30, 5-i);
             elementos.add(a);
             andares.add(a);
         }
         //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < atualizaElevador.length; i++) {
             Elevador e = new Elevador(this, "carrov.png", 100*(i+1), 650, 1+i, 8);
             elementos.add(e);
             elevadores.add(e);

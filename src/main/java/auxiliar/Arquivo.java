@@ -11,14 +11,12 @@ public class Arquivo {
     private HashMap<Integer, ArrayList<Pessoa>> instantes;
 
     public Arquivo(String nomeArquivo) {
-        System.out.println("Arquivo");
         this.instantes = new HashMap<>();
         try {
             FileReader arq = new FileReader(nomeArquivo);
             BufferedReader lerArq = new BufferedReader(arq);
 
             String linha = lerArq.readLine();
-            System.out.println("Linha:" + linha);
 
             while (linha != null) {
                 armazenaInstante(linha);
@@ -26,9 +24,8 @@ public class Arquivo {
             }
             arq.close();
 
-        } catch (IOException e){
+        } catch (Exception e){
         }
-        System.out.println("instante:" + instantes.get(0));
     }
 
     private void armazenaInstante(String linha){
@@ -60,17 +57,11 @@ public class Arquivo {
             aux = linha.indexOf(":", aux);
         }
 
-        instantes.put(Integer.getInteger(chave), valores);
-
-//        instantes.get("0").forEach(p -> {
-//            System.out.println(p.getAndarOrigem() + " " + p.getAndarDestino());
-//        });
+        instantes.put(Integer.parseInt(chave), valores);
     }
 
     public ArrayList<Pessoa> proximoInstante(int chave){
-        if(instantes.containsKey(chave)){
-            return instantes.remove(chave);
-        }
+        if(instantes.containsKey(chave)) return instantes.get(chave);
         return new ArrayList<>();
     }
 }

@@ -14,14 +14,23 @@ public class Andar extends Elemento{
         this.andar = andar;
     }
 
+    public boolean fila(){
+        return fila.size() > 0;
+    }
+
     public void adicionarPessoas(Pessoa pessoa){
         fila.add(pessoa);
     }
 
     public ArrayList<Pessoa> removePessoas(int quantidade){
         ArrayList<Pessoa> saida = new ArrayList<>();
-        for (int i = 0; i < quantidade; quantidade--) {
-            saida.add(fila.remove(fila.indexOf(i)));
+        while(quantidade > 0){
+            if(fila.size() > 0){
+                Pessoa p = fila.remove(0);
+                System.out.println("Removendo pessoa");
+                saida.add(p);
+            }else break;
+            quantidade--;
         }
         return saida;
     }

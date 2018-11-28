@@ -44,6 +44,7 @@ public class Elevador extends Elemento{
     }
 
     public void addPessoas(ArrayList<Pessoa> pessoas){
+        capacidadeAtual = capacidadeAtual+pessoas.size();
         numeroViagens++;
         pessoas.addAll(pessoas);
     }

@@ -20,7 +20,6 @@ public class Sistema {
     }
 
     public void gerenciar(){
-        System.out.println("Sistema.gerenciar");
         //Adicionando Pessoas nos Andares
         addPessoasEmAndares();
         //disparo elevadores que estão parados
@@ -29,41 +28,27 @@ public class Sistema {
         instante++;
     }
 
-    public void atualizarElevadores(){
-        System.out.println("Sistema.atualizarElevadores");
-
-        elevadores.forEach(elevador -> {
-            elevador.atualizar();
-        });
-    }
-
     /**
      * Esse método recebe uma lista de Pessoas que chegaram na fila no instante atual.
      * Adiciona essas pessoas nas filas dos determinados Andares.
      */
     private void addPessoasEmAndares(){
-        System.out.println("Sistema.addPessoasEmAndares");
-
+        System.out.println("----------------------| Instante " + instante);
         //Lista com Pessoas que entrarão na fila
         ArrayList<Pessoa> pessoas = arq.proximoInstante(instante);
-        System.out.println("Tamanho da lista pessoas:"+pessoas.size());
-
-        //precisa verificar se lista está nula
 
         //Buscando os Andares
         andares.forEach(andar->{
 
             //Buscando Pessoas que estão no Andar apontado
-            pessoas.forEach(pessoa -> {
-
-                System.out.println(pessoa.getAndarOrigem() + " " + pessoa.getAndarDestino());
-
+            for (int i = 0; i < pessoas.size(); i++) {
                 //Removendo Pessoa da lista Pessoas e adicionando no devido Andar
-                if(pessoa.getAndarOrigem() == andar.getAndar()){
-                    int index = pessoas.indexOf(pessoa);
+                if(pessoas.get(i).getAndarOrigem() == andar.getAndar()){
+                    int index = pessoas.indexOf(pessoas.get(i));
                     andar.adicionarPessoas(pessoas.remove(index));
+                    i--;
                 }
-            });
+            }
         });
     }
 
@@ -78,11 +63,19 @@ public class Sistema {
 
                 //Verifica se elevador está passando ou parado em algum andar
                 if(elevador.getPosY() == andar.getPosY()){
+                    System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
 
-                    //Se Elevador abriu para despachar Pessoas ou se está descendo
-                    if(elevador.removePessoas(andar.getAndar()) || elevador.isDescendo()){
+                    if(!elevador.isDescendo() && andar.fila()){
+                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        System.out.println("Depois de entrar: "+elevador.lugaresLivres());
                     }
+//                    //Se Elevador abriu para despachar Pessoas ou se está descendo
+//                    if(elevador.removePessoas(andar.getAndar()) || !elevador.isDescendo()){
+//                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+//                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+//                        System.out.println("Depois de entrar: "+elevador.lugaresLivres());
+//                    }
                 }
             });
         });
