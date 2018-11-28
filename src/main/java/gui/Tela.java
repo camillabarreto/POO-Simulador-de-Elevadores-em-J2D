@@ -28,40 +28,42 @@ public class Tela extends JPanel implements ActionListener {
     private int taxaDeAtualizacao;
 
     // Para capturar as teclas pressionadas pelo usuário
-    private Teclado teclado;
     private JTextArea console;
-
 
     // Elementos que serão desenhados na tela
     private ArrayList<Elemento> elementos;
+
+    //Sistema que vai controlar os Elevadores para buscar e deixar pessoas nos Andares
     private Sistema sistema;
 
+    // Vetor de Threads que serão responsáveis por atualizar as coordenadas de um elemento específico
+    private Thread[] atualizaElevador;
+    private Thread atualizaSistema;
 
-    // Exemplo de uma Thread. Essa Thread será responsável por atualizar as coordenadas de um elemento específico
-    private Thread atualizaUmCarroViaThread;
+    private String arquivoInsantes;
+
 
 
     /**
      * É necessário ver quais teclas foram pressionadas e ter uma referência do componente onde serão escritas
      * mensagens para o usuário
-     *
-     * @param teclado responsável por tratar as teclas pressionadas pelo usuário
      * @param console para imprimir as mensagens para o usuário
      */
-    public Tela(Teclado teclado, JTextArea console) {
+    public Tela(JTextArea console) {
 
         this.setLayout(new BorderLayout());
         this.setBackground(Color.gray);
         this.repaint();
 
-        this.elementos = new ArrayList<>();
-        this.teclado = teclado;
         this.console = console;
 
-        this.taxaDeAtualizacao = 120;
+        this.taxaDeAtualizacao = 50;
 
+        this.elementos = new ArrayList<>();
+        this.atualizaElevador = new Thread[3];
         // Criando os elementos que serão desenhados na tela
-        this.criarElementos();
+        //this.criarElementos();
+        this.arquivoInsantes = "/home/camilla/Área de Trabalho/projeto-pratico-02-camillabarreto/src/main/java/util/arquivoInstantes.txt";
     }
 
 
@@ -69,38 +71,27 @@ public class Tela extends JPanel implements ActionListener {
      * Aqui são criados 3 elementos de auxiliar. Cada elemento é de uma subclasse distinta
      */
     public void criarElementos(){
-
+        //Criando andares
         elementos.clear();
-
         ArrayList<Andar> andares = new ArrayList<>();
-        andares.add(new Andar(this, "traffic.png", 10, 0, 5));
-        andares.add(new Andar(this, "traffic.png", 10, 100, 4));
-        andares.add(new Andar(this, "traffic.png", 10, 200, 3));
-        andares.add(new Andar(this, "traffic.png", 10, 300, 2));
-        andares.add(new Andar(this, "traffic.png", 10, 400, 1));
-        andares.add(new Andar(this, "traffic.png", 10, 500, 0));
-
+        for (int i = 0; i < 6; i++) {
+            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 30, i);
+            elementos.add(a);
+            andares.add(a);
+        }
+        //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
-        elevadores.add(new Elevador(this, "carrov.png", 100, 400, 1, 8));
-        elevadores.add(new Elevador(this, "carrov.png", 150, 400, 1, 8));
-        elevadores.add(new Elevador(this, "carrov.png", 200, 400, 1, 8));
+        for (int i = 0; i < 3; i++) {
+            Elevador e = new Elevador(this, "carrov.png", 100*(i+1), 650, 1+i, 8);
+            elementos.add(e);
+            elevadores.add(e);
+            atualizaElevador[i] = new ThreadElevadores(e, this);
+        }
 
-        sistema = new Sistema(5, "arquivo", elevadores, andares);
-
-
-//        // Adicionando um Carro e um Semáforo
-//        elementos.add(new Carro(this,"carrov.png",100,400));
-//        elementos.add(new Semaforo(this, "traffic.png", 10, 50));
-//
-//        // Esse mesmo objeto é adicionado no ArrayList e é enviado para a Thread que será responsável por
-//        // atualizar suas coordenadas
-//        OutroCarro outroCarro = new OutroCarro(this,"azul.png",300,10);
-//
-//        elementos.add(outroCarro);
-//        this.atualizaUmCarroViaThread = new ExemploDeThread(outroCarro, this);
+        Sistema s = new Sistema(6, arquivoInsantes, elevadores, andares);
+        this.atualizaSistema = new ThreadSistema(s, this);
 
     }
-
 
     /**
      * Quando a simulação é iniciada cria-se os elementos, dispara o Timer para redesenho da tela periodicamente e
@@ -108,8 +99,11 @@ public class Tela extends JPanel implements ActionListener {
      */
     public void iniciaSimulacao(){
         this.setIgnoreRepaint(true);
+
+        //disparando o timer para atualização da tela
         this.timer = new Timer(taxaDeAtualizacao, this);
 
+        //constrói elementos que serão desenhados na tela
         this.criarElementos();
 
         // disparando timer que ficará redesenhando os elementos na tela
@@ -117,6 +111,11 @@ public class Tela extends JPanel implements ActionListener {
 
         // disparando Thread que ficará atualizando atributos de um elemento específico
         //atualizaUmCarroViaThread.start();
+        for (int i = 0; i < atualizaElevador.length; i++) {
+            atualizaElevador[i].start();
+        }
+        atualizaSistema.start();
+
     }
 
 
@@ -127,40 +126,18 @@ public class Tela extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        // Verifica a situação das teclas (pressionadas, soltas, etc)
-        //this.teclado.poll();
-
         // Atualiza as coordenadas dos elementos, respeitando a lógica de cada um
         //this.processarLogica();
 
-        sistema.gerenciar();
-        sistema.atualizarElevadores();
+        //sistema.gerenciar();
+        //sistema.atualizarElevadores();
+
+//        elementos.forEach(elemento-> {
+//            elemento.atualizar();
+//        });
 
         // desenha os elementos na tela novamente
         this.renderizar();
-    }
-
-
-    /**
-     * Aqui é feita a atualização das coordenadas de todos os elementos
-     * gráficos que estão na área de desenho da Tela
-     */
-    public void processarLogica(){
-
-        // atualizando as coordenadas manualmente
-        elementos.forEach(elemento -> {
-
-            // A ideia desse auxiliar é que o OutroCarro
-            // seja atualizado por uma outra thread e não por aqui.
-            if (!(elemento instanceof OutroCarro)) {
-
-                // Semáforo tem uma lógica de atualização diferente daquela de Carro
-                // Semáforo fica frequentemente trocando suas cores
-                // Carro só atualiza coordenadas se o usuário tive pressionado a tecla SETA para CIMA ou SETA para Baixo
-                // OutroCarro só é atualizado pela Thread "ExemploDeThread"
-                elemento.atualizar();
-            }
-        });
     }
 
 
@@ -181,12 +158,12 @@ public class Tela extends JPanel implements ActionListener {
 
         // desenhando os elementos na tela
         //elementos.forEach(elemento -> elemento.desenhar(g2));
-        sistema.getElevadores().forEach(elevador -> {
-            elevador.desenhar(g2);
+        elementos.forEach(elemento-> {
+            elemento.desenhar(g2);
         });
-        sistema.getAndares().forEach(andar -> {
-            andar.desenhar(g2);
-        });
+//        sistema.getAndares().forEach(andar -> {
+//            andar.desenhar(g2);
+//        });
 
         //liberando os contextos gráficos
         g2.dispose();
@@ -203,12 +180,14 @@ public class Tela extends JPanel implements ActionListener {
 
         // desenhando retângulos que poderiam ser janelas?
         g2.setColor(Color.darkGray);
-        g2.fillRect(200,10,40,40);
-        g2.fillRect(200,100,40,40);
-
+        g2.drawLine(0, 90, getWidth(), 90);
+        g2.drawLine(0, 210, getWidth(), 210);
+        g2.drawLine(0, 330, getWidth(), 330);
+        g2.drawLine(0, 450, getWidth(), 450);
+        g2.drawLine(0, 570, getWidth(), 570);
+        g2.drawLine(0, 690, getWidth(), 690);
         g2.dispose();
     }
-
 
     /**
      * Fim de jogo/rodada
@@ -217,6 +196,14 @@ public class Tela extends JPanel implements ActionListener {
 
         // Interrompe o timer que atualiza a tela
         this.timer.stop();
+
+        for (int i = 0; i < 3; i++) {
+            ((ThreadElevadores)this.atualizaElevador[i]).setExecutando(false);
+        }
+
+        ((ThreadSistema)this.atualizaSistema).setExecutando(false);
+
+
         this.setIgnoreRepaint(false);
 
         // Desenha a última posição dos elementos
@@ -228,13 +215,12 @@ public class Tela extends JPanel implements ActionListener {
 
 
     public ArrayList<Elemento> getElementos() {
+        ArrayList<Elemento> elementos = new ArrayList<>();
+        elementos.addAll(sistema.getAndares());
+        elementos.addAll(sistema.getElevadores());
         return elementos;
     }
 
-
-    public Teclado getTeclado() {
-        return teclado;
-    }
 
     /**
      * Console é um JTextArea do JPanel Principal. A ideia aqui é permitir escrever naquele componente
@@ -244,24 +230,5 @@ public class Tela extends JPanel implements ActionListener {
     public void escreverNoConsole(String mensagem){
         this.console.append(mensagem);
     }
-
-
-    /**
-     * Para verificar se as coordenadas informadas estão dentro da área de algum elemento que esteja na tela
-     * @param x coordenada X
-     * @param y coordenada Y
-     */
-    public void clicouSobreElemento(int x, int y){
-
-        // Varrendo lista de elementos para ver se o usuário clicou sobre um elemento. Se sim, então escreva no console
-        elementos.forEach(elemento ->{
-            if (elemento.clicouDentro(x,y)){
-                this.escreverNoConsole("Clicou sobre elemento: " + elemento.getClass() + "\n");
-            }
-
-        });
-
-    }
-
 
 }

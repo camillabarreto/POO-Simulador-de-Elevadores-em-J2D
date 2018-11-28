@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class Elevador extends Elemento{
     private ArrayList<Pessoa> pessoas;
     private int velocidade; // instantes por andar
+    private int cont;
     private int capacidadeMaxima;
     private int capacidadeAtual;
     private boolean descendo;
+    private boolean parado;
     private int numeroViagens;
 
     public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade) {
@@ -19,12 +21,22 @@ public class Elevador extends Elemento{
         this.velocidade = velocidade;
         this.capacidadeMaxima = capacidade;
         this.capacidadeAtual = 0;
-        this.descendo = true;
+        this.descendo = false;
+        this.parado = true;
         this.numeroViagens = 0;
+        this.cont = velocidade;
+    }
+
+    public int getVelocidade() {
+        return velocidade;
     }
 
     public boolean isDescendo(){
         return descendo;
+    }
+
+    public void setDescendo(boolean descendo) {
+        this.descendo = descendo;
     }
 
     public int lugaresLivres(){
@@ -48,5 +60,12 @@ public class Elevador extends Elemento{
 
     @Override
     public void atualizar() {
+        //if(!parado){
+            if(!descendo){
+                this.posY = this.posY - 20;
+            }else if(descendo){
+                this.posY = this.posY + 20;
+            }
+        //}
     }
 }

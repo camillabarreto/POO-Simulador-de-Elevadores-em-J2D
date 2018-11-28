@@ -20,9 +20,8 @@ public class Andar extends Elemento{
 
     public ArrayList<Pessoa> removePessoas(int quantidade){
         ArrayList<Pessoa> saida = new ArrayList<>();
-        while(quantidade > 0){
-            saida.add(fila.remove(fila.indexOf(0)));
-            quantidade--;
+        for (int i = 0; i < quantidade; quantidade--) {
+            saida.add(fila.remove(fila.indexOf(i)));
         }
         return saida;
     }

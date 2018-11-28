@@ -110,19 +110,6 @@ public class Principal {
                 ((Tela)painelEsquerdo).requestFocus();
             }
         });
-
-        /**
-         * Um pequeno auxiliar para verificar se o usuário clicou sobre um Elemento que está desenhado na tela.
-         *
-         * No caso, é verificado se as coordenadas do clique (x,y), estão dentro da área retangular do elemento
-         */
-        painelEsquerdo.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                ((Tela)painelEsquerdo).clicouSobreElemento(e.getX(), e.getY());
-            }
-        });
     }
 
     private void createUIComponents() {
@@ -132,7 +119,7 @@ public class Principal {
         painelPrincipal = new JPanel();
         console = new JTextArea();
 
-        painelEsquerdo = new Tela(teclado, console);
+        painelEsquerdo = new Tela(console);
         painelEsquerdo.addKeyListener(teclado);
         painelPrincipal.addKeyListener(teclado);
     }

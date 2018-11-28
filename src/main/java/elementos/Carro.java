@@ -25,13 +25,7 @@ public class Carro extends Elemento {
 
     @Override
     public void atualizar() {
-        if (pai.getTeclado().teclaApertada(cima)){
-            movimentaParaCima();
-        }else if (pai.getTeclado().teclaApertada(baixo)){
-            movimentaParaBaixo();
-        }
 
-        // TODO: Desafio: Que tal implementar métodos para permitir o Carro se movimentar para direita e esquerda?
     }
 
     /**

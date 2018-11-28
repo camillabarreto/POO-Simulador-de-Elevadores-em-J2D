@@ -9,22 +9,29 @@ public class Sistema {
     private Arquivo arq;
     private ArrayList<Elevador> elevadores;
     private ArrayList<Andar> andares;
+    private int instante;
 
-    public Sistema(int maximoAndares, String nomeArquivo, ArrayList<Elevador> elevadores, ArrayList<Andar> andares) {
+    public Sistema(int maximoAndares, String arquivoInstantes, ArrayList<Elevador> elevadores, ArrayList<Andar> andares) {
         this.maximoAndares = maximoAndares;
-        this.arq = new Arquivo(nomeArquivo);
+        this.arq = new Arquivo(arquivoInstantes);
         this.elevadores = elevadores;
         this.andares = andares;
+        this.instante = 0;
     }
 
     public void gerenciar(){
+        System.out.println("Sistema.gerenciar");
         //Adicionando Pessoas nos Andares
         addPessoasEmAndares();
         //disparo elevadores que estão parados
         gerenciarElevadores();
+
+        instante++;
     }
 
     public void atualizarElevadores(){
+        System.out.println("Sistema.atualizarElevadores");
+
         elevadores.forEach(elevador -> {
             elevador.atualizar();
         });
@@ -35,9 +42,11 @@ public class Sistema {
      * Adiciona essas pessoas nas filas dos determinados Andares.
      */
     private void addPessoasEmAndares(){
+        System.out.println("Sistema.addPessoasEmAndares");
 
         //Lista com Pessoas que entrarão na fila
-        ArrayList<Pessoa> pessoas = arq.proximoInstante(0);
+        ArrayList<Pessoa> pessoas = arq.proximoInstante(instante);
+        System.out.println("Tamanho da lista pessoas:"+pessoas.size());
 
         //precisa verificar se lista está nula
 
@@ -46,6 +55,8 @@ public class Sistema {
 
             //Buscando Pessoas que estão no Andar apontado
             pessoas.forEach(pessoa -> {
+
+                System.out.println(pessoa.getAndarOrigem() + " " + pessoa.getAndarDestino());
 
                 //Removendo Pessoa da lista Pessoas e adicionando no devido Andar
                 if(pessoa.getAndarOrigem() == andar.getAndar()){
