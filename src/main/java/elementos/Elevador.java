@@ -67,13 +67,23 @@ public class Elevador extends Elemento{
         return false;
     }
 
+    /**
+     * posiçãoAtual = -0, elevador deve ficar parado
+     * @param posiçãoAndar: '0' elevador parado, '1' elevador sobe, '-1' elevador desce
+     */
     public void viajar(int posiçãoAndar) {
-        disponivel = false;
-        portaAberta = false;
-        if(posiçãoAndar < this.posY){
-            this.descendo = false;
-        }else this.descendo = true;
-
+        if(posiçãoAndar == 0){
+            disponivel = true;
+            portaAberta = true;
+        }else{
+            disponivel = false;
+            portaAberta = false;
+            if(posiçãoAndar == -1){
+                this.descendo = true;
+            }else{
+                this.descendo = false;
+            }
+        }
     }
 
     @Override

@@ -88,16 +88,14 @@ public class Sistema {
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
-                    //se está no último andar
-                    else if(andar.getAndar() == andares.size()-1){
-                        System.out.println("SITUAÇÃO 4");
-                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-                    }
-
                     System.out.println("Depois: " + elevador.lugaresLivres());
 
                     //se tem alguem no elevador
-                    if(elevador.fila()){
+                    if(!elevador.fila()) {
+                        elevador.viajar(0);
+                    }else if(andar.getAndar() == 0){
+                        elevador.viajar(1);
+                    }else if(andar.getAndar() == maximoAndares-1){
                         elevador.viajar(-1);
                     }
 
