@@ -44,21 +44,22 @@ public class Elevador extends Elemento{
     }
 
     public void addPessoas(ArrayList<Pessoa> pessoas){
-        System.out.println("Adicionando pessoas: " + pessoas.size());
         if(pessoas.size() > 0) portaAberta = true;
         capacidadeAtual = capacidadeAtual+pessoas.size();
-        pessoas.addAll(pessoas);
+        this.pessoas.addAll(pessoas);
     }
 
     public boolean removePessoas(int andarAtual) {
         ArrayList<Pessoa> saida = new ArrayList<>();
-        pessoas.forEach(p ->{
+        for (int i = 0; i < pessoas.size(); i++) {
+            Pessoa p = pessoas.get(i);
             if(p.getAndarDestino() == andarAtual){
-                saida.add(pessoas.remove(pessoas.indexOf(p)));
+                saida.add(this.pessoas.remove(i));
             }
-        });
-        System.out.println("Removendo pessoas: " + saida.size());
+        }
+
         if(saida.size() > 0){
+            capacidadeAtual = capacidadeAtual-saida.size();
             numeroViagens++;
             portaAberta = true;
             return true;
@@ -77,12 +78,12 @@ public class Elevador extends Elemento{
 
     @Override
     public void atualizar() {
-        if(disponivel) return;
-
-        if(!descendo){
-            this.posY = this.posY - 20;
-        }else if(descendo){
-            this.posY = this.posY + 20;
+        if(!disponivel){
+            if(!descendo){
+                this.posY = this.posY - 20;
+            }else if(descendo){
+                this.posY = this.posY + 20;
+            }
         }
     }
 }

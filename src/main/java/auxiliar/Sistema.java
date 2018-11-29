@@ -57,14 +57,14 @@ public class Sistema {
      * Caso o Elevador possua Pessoas que tem seu destino no Andar atual, então devem ser despachadas
      */
     private void gerenciarElevadores(){
-        System.out.println("Sistema.gerenciarElevadores");
         andares.forEach(andar -> {
             elevadores.forEach(elevador -> {
-                System.out.println(elevador.getPosY() +" "+ andar.getPosY());
+
                 //Verifica se elevador está passando ou parado em algum andar
                 if(elevador.getPosY() == andar.getPosY()) {
 
                     System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
+                    System.out.println("Antes: " + elevador.lugaresLivres());
 
                     //verificando se pessoas querem descer no andar atual
                     //se sim, será removido e porta fica aberta
@@ -72,24 +72,29 @@ public class Sistema {
 
                     //se parou em andar que possui fila
                     if (elevador.isPortaAberta() && andar.fila()) {
-                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+                        System.out.println("SITUAÇÃO 1");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
                     }
 
                     //se está descendo e tiver fila no andar
                     else if (elevador.isDescendo() && andar.fila()) {
-                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+                        System.out.println("SITUAÇÃO 2");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
                     }
 
                     //se ta subindo e não está carregando ninguém
                     else if (!elevador.isDescendo() && !elevador.fila()) {
-                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+                        System.out.println("SITUAÇÃO 3");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
                     }
+
+                    //se está no último andar
+                    else if(andar.getAndar() == andares.size()-1){
+                        System.out.println("SITUAÇÃO 4");
+                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                    }
+
+                    System.out.println("Depois: " + elevador.lugaresLivres());
 
                     //se tem alguem no elevador
                     if(elevador.fila()){
@@ -120,11 +125,4 @@ public class Sistema {
         });
     }
 
-    public ArrayList<Elevador> getElevadores() {
-        return elevadores;
-    }
-
-    public ArrayList<Andar> getAndares() {
-        return andares;
-    }
 }

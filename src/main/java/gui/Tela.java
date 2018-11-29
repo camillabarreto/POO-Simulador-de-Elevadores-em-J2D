@@ -61,12 +61,12 @@ public class Tela extends JPanel implements ActionListener {
         this.setBackground(Color.gray);
         this.repaint();
 
-        this.QUANTIDADE_ELEVADORES = 1;
+        this.QUANTIDADE_ELEVADORES = 3;
         this.QUANTIDADE_ANDARES = 6;
 
         this.console = console;
 
-        this.taxaDeAtualizacao = 100;
+        this.taxaDeAtualizacao = 250;
 
         this.elementos = new ArrayList<>();
 
@@ -85,7 +85,7 @@ public class Tela extends JPanel implements ActionListener {
         elementos.clear();
         ArrayList<Andar> andares = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE_ANDARES; i++) {
-            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 30, 5-i);
+            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 50, 5-i);
             elementos.add(a);
             andares.add(a);
         }

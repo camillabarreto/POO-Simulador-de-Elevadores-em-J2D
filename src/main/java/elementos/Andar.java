@@ -27,7 +27,6 @@ public class Andar extends Elemento{
         while(quantidade > 0){
             if(fila.size() > 0){
                 Pessoa p = fila.remove(0);
-                System.out.println("Removendo pessoa");
                 saida.add(p);
             }else break;
             quantidade--;
