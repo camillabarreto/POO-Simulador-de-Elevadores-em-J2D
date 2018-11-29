@@ -89,27 +89,6 @@ public class Principal {
                 ((Tela)painelEsquerdo).requestFocus();
             }
         });
-
-        /**
-         * Um pequeno auxiliar de como um componente da JPanel principal poderia invocar
-         * objetos que estão contidos dentro da Tela
-         *
-         */
-        desceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Elemento> elementos = ((Tela) painelEsquerdo).getElementos();
-                // atualizando as coordenadas manualmente
-                elementos.forEach(elemento -> {
-                    if (elemento instanceof Carro){
-                        ((Carro)elemento).movimentaParaBaixo();
-                    }
-                });
-
-                // devolvendo o foco para o painel Tela poder capturar as teclas
-                ((Tela)painelEsquerdo).requestFocus();
-            }
-        });
     }
 
     private void createUIComponents() {

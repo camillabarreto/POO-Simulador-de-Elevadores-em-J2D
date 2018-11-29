@@ -38,9 +38,15 @@ public class Tela extends JPanel implements ActionListener {
 
     // Vetor de Threads que serão responsáveis por atualizar as coordenadas de um elemento específico
     private Thread[] atualizaElevador;
+
+    // Threads responsável por atualizar as filas dos Andares
     private Thread atualizaSistema;
 
     private String arquivoInsantes;
+
+    private int QUANTIDADE_ELEVADORES;
+
+    private int QUANTIDADE_ANDARES;
 
 
 
@@ -55,14 +61,18 @@ public class Tela extends JPanel implements ActionListener {
         this.setBackground(Color.gray);
         this.repaint();
 
+        this.QUANTIDADE_ELEVADORES = 1;
+        this.QUANTIDADE_ANDARES = 6;
+
         this.console = console;
 
-        this.taxaDeAtualizacao = 50;
+        this.taxaDeAtualizacao = 100;
 
         this.elementos = new ArrayList<>();
-        this.atualizaElevador = new Thread[2];
+
+        this.atualizaElevador = new Thread[QUANTIDADE_ELEVADORES];
+
         // Criando os elementos que serão desenhados na tela
-        //this.criarElementos();
         this.arquivoInsantes = "/home/camilla/Área de Trabalho/projeto-pratico-02-camillabarreto/src/main/java/util/arquivoInstantes.txt";
     }
 
@@ -74,15 +84,15 @@ public class Tela extends JPanel implements ActionListener {
         //Criando andares
         elementos.clear();
         ArrayList<Andar> andares = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < QUANTIDADE_ANDARES; i++) {
             Andar a = new Andar(this, "traffic.png", 10, (i*120) + 30, 5-i);
             elementos.add(a);
             andares.add(a);
         }
         //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
-        for (int i = 0; i < atualizaElevador.length; i++) {
-            Elevador e = new Elevador(this, "carrov.png", 100*(i+1), 650, 1+i, 8);
+        for (int i = 0; i < QUANTIDADE_ELEVADORES; i++) {
+            Elevador e = new Elevador(this, "carrov.png", 100*(i+1), 650, 1+i, 8-(i*2));
             elementos.add(e);
             elevadores.add(e);
             atualizaElevador[i] = new ThreadElevadores(e, this);
@@ -212,15 +222,6 @@ public class Tela extends JPanel implements ActionListener {
         // Interrompe a Thread que estava atualizando as coordenadas do OutroCarro
         //((ExemploDeThread)this.atualizaUmCarroViaThread).setExecutando(false);
     }
-
-
-    public ArrayList<Elemento> getElementos() {
-        ArrayList<Elemento> elementos = new ArrayList<>();
-        elementos.addAll(sistema.getAndares());
-        elementos.addAll(sistema.getElevadores());
-        return elementos;
-    }
-
 
     /**
      * Console é um JTextArea do JPanel Principal. A ideia aqui é permitir escrever naquele componente

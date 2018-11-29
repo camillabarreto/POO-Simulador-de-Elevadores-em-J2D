@@ -8,11 +8,11 @@ import java.util.ArrayList;
 public class Elevador extends Elemento{
     private ArrayList<Pessoa> pessoas;
     private int velocidade; // instantes por andar
-    private int cont;
     private int capacidadeMaxima;
     private int capacidadeAtual;
     private boolean descendo;
-    private boolean parado;
+    private boolean portaAberta;
+    private boolean disponivel;
     private int numeroViagens;
 
     public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade) {
@@ -22,30 +22,31 @@ public class Elevador extends Elemento{
         this.capacidadeMaxima = capacidade;
         this.capacidadeAtual = 0;
         this.descendo = false;
-        this.parado = true;
+        this.portaAberta = true;
+        this.disponivel = true;
         this.numeroViagens = 0;
-        this.cont = velocidade;
     }
 
-    public int getVelocidade() {
-        return velocidade;
-    }
+    public boolean isDisponivel(){ return disponivel; }
+
+    public boolean isPortaAberta(){ return portaAberta; }
 
     public boolean isDescendo(){
         return descendo;
     }
 
-    public void setDescendo(boolean descendo) {
-        this.descendo = descendo;
-    }
+    public boolean fila(){ return pessoas.size() > 0; }
+
+    public int getVelocidade() { return velocidade; }
 
     public int lugaresLivres(){
         return capacidadeMaxima - capacidadeAtual;
     }
 
     public void addPessoas(ArrayList<Pessoa> pessoas){
+        System.out.println("Adicionando pessoas: " + pessoas.size());
+        if(pessoas.size() > 0) portaAberta = true;
         capacidadeAtual = capacidadeAtual+pessoas.size();
-        numeroViagens++;
         pessoas.addAll(pessoas);
     }
 
@@ -56,17 +57,32 @@ public class Elevador extends Elemento{
                 saida.add(pessoas.remove(pessoas.indexOf(p)));
             }
         });
-        return saida.size() > 0;
+        System.out.println("Removendo pessoas: " + saida.size());
+        if(saida.size() > 0){
+            numeroViagens++;
+            portaAberta = true;
+            return true;
+        }
+        return false;
+    }
+
+    public void viajar(int posiçãoAndar) {
+        disponivel = false;
+        portaAberta = false;
+        if(posiçãoAndar < this.posY){
+            this.descendo = false;
+        }else this.descendo = true;
+
     }
 
     @Override
     public void atualizar() {
-        //if(!parado){
-            if(!descendo){
-                this.posY = this.posY - 20;
-            }else if(descendo){
-                this.posY = this.posY + 20;
-            }
-        //}
+        if(disponivel) return;
+
+        if(!descendo){
+            this.posY = this.posY - 20;
+        }else if(descendo){
+            this.posY = this.posY + 20;
+        }
     }
 }

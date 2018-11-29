@@ -33,7 +33,7 @@ public class Sistema {
      * Adiciona essas pessoas nas filas dos determinados Andares.
      */
     private void addPessoasEmAndares(){
-        System.out.println("----------------------| Instante " + instante);
+        System.out.println("----------------------------------------------------| Instante " + instante);
         //Lista com Pessoas que entrarão na fila
         ArrayList<Pessoa> pessoas = arq.proximoInstante(instante);
 
@@ -57,29 +57,67 @@ public class Sistema {
      * Caso o Elevador possua Pessoas que tem seu destino no Andar atual, então devem ser despachadas
      */
     private void gerenciarElevadores(){
+        System.out.println("Sistema.gerenciarElevadores");
         andares.forEach(andar -> {
-
             elevadores.forEach(elevador -> {
-
+                System.out.println(elevador.getPosY() +" "+ andar.getPosY());
                 //Verifica se elevador está passando ou parado em algum andar
-                if(elevador.getPosY() == andar.getPosY()){
+                if(elevador.getPosY() == andar.getPosY()) {
+
                     System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
 
-                    if(!elevador.isDescendo() && andar.fila()){
+                    //verificando se pessoas querem descer no andar atual
+                    //se sim, será removido e porta fica aberta
+                    elevador.removePessoas(andar.getAndar());
+
+                    //se parou em andar que possui fila
+                    if (elevador.isPortaAberta() && andar.fila()) {
                         System.out.println("Antes de entrar: " + elevador.lugaresLivres());
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-                        System.out.println("Depois de entrar: "+elevador.lugaresLivres());
+                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
                     }
-//                    //Se Elevador abriu para despachar Pessoas ou se está descendo
-//                    if(elevador.removePessoas(andar.getAndar()) || !elevador.isDescendo()){
-//                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
-//                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
-//                        System.out.println("Depois de entrar: "+elevador.lugaresLivres());
-//                    }
+
+                    //se está descendo e tiver fila no andar
+                    else if (elevador.isDescendo() && andar.fila()) {
+                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
+                    }
+
+                    //se ta subindo e não está carregando ninguém
+                    else if (!elevador.isDescendo() && !elevador.fila()) {
+                        System.out.println("Antes de entrar: " + elevador.lugaresLivres());
+                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        System.out.println("Depois de entrar: " + elevador.lugaresLivres());
+                    }
+
+                    //se tem alguem no elevador
+                    if(elevador.fila()){
+                        elevador.viajar(-1);
+                    }
+
                 }
             });
         });
 
+        //nesse ponto já saiu quem tinha que sair, ja entrou quem tinha que entrar
+        //precisamos verificar se ainda existe fila nos andares
+        //se existir, o elevador mais próximo deve ser chamado
+
+        andares.forEach(andar -> {
+            if(andar.fila()){
+                int aux = -1;
+                for (int i = 0; i < elevadores.size(); i++) {
+                    if(elevadores.get(i).isDisponivel()){
+                        aux = i;
+                        break;
+                    }
+                }
+                if(aux != -1){
+                    elevadores.get(aux).viajar(andar.getPosY());
+                }
+            }
+        });
     }
 
     public ArrayList<Elevador> getElevadores() {
