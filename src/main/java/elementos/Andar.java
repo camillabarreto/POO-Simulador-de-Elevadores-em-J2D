@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Andar extends Elemento{
     private ArrayList<Pessoa> fila;
     private int andar;
+    private String imagemFilaVazia = "filaVazia.png";
+    private String imagemFilaCheia = "filaCheia.png";
 
     public Andar(Tela pai, String imagemNome, int posX, int posY, int andar) {
         super(pai, imagemNome, posX, posY);
@@ -17,6 +19,8 @@ public class Andar extends Elemento{
     public boolean fila(){
         return fila.size() > 0;
     }
+
+    public int filaTamanho() { return fila.size(); }
 
     public void adicionarPessoas(Pessoa pessoa){
         fila.add(pessoa);
@@ -36,6 +40,12 @@ public class Andar extends Elemento{
 
     public int getAndar(){
         return andar;
+    }
+
+    public void carregarImagem(){
+        if(fila.size() > 0){
+            this.icone = this.carregarImagem(imagemFilaCheia);
+        }else this.icone = this.carregarImagem(imagemFilaVazia);
     }
 
     @Override

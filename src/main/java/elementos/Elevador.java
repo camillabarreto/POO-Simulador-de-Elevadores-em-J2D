@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 public class Elevador extends Elemento{
     private ArrayList<Pessoa> pessoas;
-    private int velocidade; // instantes por andar
+    private int velocidade;
     private int capacidadeMaxima;
     private int capacidadeAtual;
     private boolean descendo;
     private boolean portaAberta;
     private boolean disponivel;
     private int numeroViagens;
-    private String imagemPortaAberta = "elevadorAberto.png";
-    private String imagemPortaFechada = "elevadorFechado.png";
+    private String IMAGEM_PORTA_ABERTA = "elevadorAberto.png";
+    private String IMAGEM_PORTA_FECHADA = "elevadorFechado.png";
 
     public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade) {
         super(pai, imagemNome, posX, posY);
@@ -39,11 +39,11 @@ public class Elevador extends Elemento{
 
     public boolean fila(){ return pessoas.size() > 0; }
 
+    public int filaTamanho() {return pessoas.size();}
+
     public int getVelocidade() { return velocidade; }
 
-    public int lugaresLivres(){
-        return capacidadeMaxima - capacidadeAtual;
-    }
+    public int lugaresLivres(){ return capacidadeMaxima - capacidadeAtual; }
 
     public void addPessoas(ArrayList<Pessoa> pessoas){
         if(pessoas.size() > 0) setPortaAberta(true);
@@ -73,6 +73,8 @@ public class Elevador extends Elemento{
      * @param posiçãoAndar: '0' elevador parado, '1' elevador sobe, '-1' elevador desce
      */
     public void viajar(int posiçãoAndar) {
+
+        //verificar essa logica aqui porque ta dando conflito
         if(posiçãoAndar == 0){
             disponivel = true;
             setPortaAberta(true);
@@ -90,8 +92,8 @@ public class Elevador extends Elemento{
     private void setPortaAberta(boolean modo){
         portaAberta = modo;
         if(portaAberta){
-            this.icone = this.carregarImagem(imagemPortaAberta);
-        }else this.icone = this.carregarImagem(imagemPortaFechada);
+            this.icone = this.carregarImagem(IMAGEM_PORTA_ABERTA);
+        }else this.icone = this.carregarImagem(IMAGEM_PORTA_FECHADA);
     }
 
     @Override

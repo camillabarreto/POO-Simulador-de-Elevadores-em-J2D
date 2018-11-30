@@ -1,11 +1,7 @@
 package gui;
 
 import auxiliar.Sistema;
-import com.sun.org.apache.xpath.internal.operations.And;
 import elementos.*;
-import auxiliar.ExemploDeThread;
-import auxiliar.OutroCarro;
-import util.Teclado;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +38,7 @@ public class Tela extends JPanel implements ActionListener {
     // Threads responsável por atualizar as filas dos Andares
     private Thread atualizaSistema;
 
-    private String arquivoInsantes;
+    private String ARQUIVO_DE_INSTANTES;
 
     private int QUANTIDADE_ELEVADORES;
 
@@ -51,8 +47,6 @@ public class Tela extends JPanel implements ActionListener {
 
 
     /**
-     * É necessário ver quais teclas foram pressionadas e ter uma referência do componente onde serão escritas
-     * mensagens para o usuário
      * @param console para imprimir as mensagens para o usuário
      */
     public Tela(JTextArea console) {
@@ -63,42 +57,38 @@ public class Tela extends JPanel implements ActionListener {
 
         this.QUANTIDADE_ELEVADORES = 3;
         this.QUANTIDADE_ANDARES = 6;
+        this.ARQUIVO_DE_INSTANTES = "/home/camilla/Área de Trabalho/projeto-pratico-02-camillabarreto/src/main/java/util/arquivoInstantes.txt";
 
         this.console = console;
-
         this.taxaDeAtualizacao = 250;
 
         this.elementos = new ArrayList<>();
-
         this.atualizaElevador = new Thread[QUANTIDADE_ELEVADORES];
-
-        // Criando os elementos que serão desenhados na tela
-        this.arquivoInsantes = "/home/camilla/Área de Trabalho/projeto-pratico-02-camillabarreto/src/main/java/util/arquivoInstantes.txt";
     }
 
 
     /**
-     * Aqui são criados 3 elementos de auxiliar. Cada elemento é de uma subclasse distinta
+     *
      */
     public void criarElementos(){
         //Criando andares
         elementos.clear();
         ArrayList<Andar> andares = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE_ANDARES; i++) {
-            Andar a = new Andar(this, "andarFila.png", 10, (i*120), 5-i);
+            Andar a = new Andar(this, "filaVazia.png", 10, (i*120), 5-i);
             elementos.add(a);
             andares.add(a);
         }
         //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE_ELEVADORES; i++) { //carrov.png
-            Elevador e = new Elevador(this, "elevadorAberto.png", 100*(i+1), 600, 1+i, 8-(i*2));
+            Elevador e = new Elevador(this, "elevadorAberto.png", 100*(i+1), 600, 1+i, 4+(i*2));
             elementos.add(e);
             elevadores.add(e);
             atualizaElevador[i] = new ThreadElevadores(e, this);
         }
 
-        Sistema s = new Sistema(6, arquivoInsantes, elevadores, andares);
+        Sistema s = new Sistema(QUANTIDADE_ANDARES, ARQUIVO_DE_INSTANTES, elevadores, andares);
         this.atualizaSistema = new ThreadSistema(s, this);
 
     }

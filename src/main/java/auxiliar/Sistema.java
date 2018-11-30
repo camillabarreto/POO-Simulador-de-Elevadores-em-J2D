@@ -63,8 +63,7 @@ public class Sistema {
                 //Verifica se elevador está passando ou parado em algum andar
                 if(elevador.getPosY() == andar.getPosY()) {
 
-                    System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
-                    System.out.println("Antes: " + elevador.lugaresLivres());
+                    //System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
 
                     //verificando se pessoas querem descer no andar atual
                     //se sim, será removido e porta fica aberta
@@ -72,23 +71,18 @@ public class Sistema {
 
                     //se parou em andar que possui fila
                     if (elevador.isPortaAberta() && andar.fila()) {
-                        System.out.println("SITUAÇÃO 1");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
                     //se está descendo e tiver fila no andar
                     else if (elevador.isDescendo() && andar.fila()) {
-                        System.out.println("SITUAÇÃO 2");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
                     //se ta subindo e não está carregando ninguém
                     else if (!elevador.isDescendo() && !elevador.fila()) {
-                        System.out.println("SITUAÇÃO 3");
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
-
-                    System.out.println("Depois: " + elevador.lugaresLivres());
 
                     //se tem alguem no elevador
                     if(!elevador.fila()) {
@@ -98,9 +92,11 @@ public class Sistema {
                     }else if(andar.getAndar() == maximoAndares-1){
                         elevador.viajar(-1);
                     }
-
+                    //System.out.println(" - FilaELevador: " + elevador.filaTamanho());
                 }
             });
+            System.out.println("Andar " + andar.getAndar() + " : " + andar.filaTamanho());
+            andar.carregarImagem();
         });
 
         //nesse ponto já saiu quem tinha que sair, ja entrou quem tinha que entrar
@@ -108,16 +104,17 @@ public class Sistema {
         //se existir, o elevador mais próximo deve ser chamado
 
         andares.forEach(andar -> {
+            //se tem fila no andar, verificar se tem elevadores disponiveis
             if(andar.fila()){
-                int aux = -1;
                 for (int i = 0; i < elevadores.size(); i++) {
-                    if(elevadores.get(i).isDisponivel()){
-                        aux = i;
+                    Elevador e = elevadores.get(i);
+                    if(e.isDisponivel()){
+                        System.out.println("Elevador " + (i+1) + " disponivel");
+                        if(andar.getPosY() < e.getPosY()){
+                            e.viajar(1);
+                        }else e.viajar(-1);
                         break;
-                    }
-                }
-                if(aux != -1){
-                    elevadores.get(aux).viajar(andar.getPosY());
+                    }else System.out.println("Elevador " + (i+1) + " NÃO disponivel");
                 }
             }
         });
