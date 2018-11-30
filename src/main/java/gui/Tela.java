@@ -85,14 +85,14 @@ public class Tela extends JPanel implements ActionListener {
         elementos.clear();
         ArrayList<Andar> andares = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE_ANDARES; i++) {
-            Andar a = new Andar(this, "traffic.png", 10, (i*120) + 50, 5-i);
+            Andar a = new Andar(this, "andarFila.png", 10, (i*120), 5-i);
             elementos.add(a);
             andares.add(a);
         }
         //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
-        for (int i = 0; i < QUANTIDADE_ELEVADORES; i++) {
-            Elevador e = new Elevador(this, "carrov.png", 100*(i+1), 650, 1+i, 8-(i*2));
+        for (int i = 0; i < QUANTIDADE_ELEVADORES; i++) { //carrov.png
+            Elevador e = new Elevador(this, "elevadorAberto.png", 100*(i+1), 600, 1+i, 8-(i*2));
             elementos.add(e);
             elevadores.add(e);
             atualizaElevador[i] = new ThreadElevadores(e, this);

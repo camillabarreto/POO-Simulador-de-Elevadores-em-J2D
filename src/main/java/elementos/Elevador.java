@@ -14,6 +14,8 @@ public class Elevador extends Elemento{
     private boolean portaAberta;
     private boolean disponivel;
     private int numeroViagens;
+    private String imagemPortaAberta = "elevadorAberto.png";
+    private String imagemPortaFechada = "elevadorFechado.png";
 
     public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade) {
         super(pai, imagemNome, posX, posY);
@@ -44,7 +46,7 @@ public class Elevador extends Elemento{
     }
 
     public void addPessoas(ArrayList<Pessoa> pessoas){
-        if(pessoas.size() > 0) portaAberta = true;
+        if(pessoas.size() > 0) setPortaAberta(true);
         capacidadeAtual = capacidadeAtual+pessoas.size();
         this.pessoas.addAll(pessoas);
     }
@@ -61,8 +63,7 @@ public class Elevador extends Elemento{
         if(saida.size() > 0){
             capacidadeAtual = capacidadeAtual-saida.size();
             numeroViagens++;
-            portaAberta = true;
-            return true;
+            setPortaAberta(true);
         }
         return false;
     }
@@ -74,16 +75,23 @@ public class Elevador extends Elemento{
     public void viajar(int posiçãoAndar) {
         if(posiçãoAndar == 0){
             disponivel = true;
-            portaAberta = true;
+            setPortaAberta(true);
         }else{
             disponivel = false;
-            portaAberta = false;
+            setPortaAberta(false);
             if(posiçãoAndar == -1){
                 this.descendo = true;
             }else{
                 this.descendo = false;
             }
         }
+    }
+
+    private void setPortaAberta(boolean modo){
+        portaAberta = modo;
+        if(portaAberta){
+            this.icone = this.carregarImagem(imagemPortaAberta);
+        }else this.icone = this.carregarImagem(imagemPortaFechada);
     }
 
     @Override
