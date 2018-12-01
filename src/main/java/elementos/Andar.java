@@ -20,8 +20,6 @@ public class Andar extends Elemento{
         return fila.size() > 0;
     }
 
-    public int filaTamanho() { return fila.size(); }
-
     public void adicionarPessoas(Pessoa pessoa){
         fila.add(pessoa);
     }

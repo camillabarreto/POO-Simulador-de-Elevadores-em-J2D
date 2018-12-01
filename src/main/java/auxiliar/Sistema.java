@@ -2,6 +2,8 @@ package auxiliar;
 
 import elementos.Andar;
 import elementos.Elevador;
+
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Sistema {
@@ -10,22 +12,35 @@ public class Sistema {
     private ArrayList<Elevador> elevadores;
     private ArrayList<Andar> andares;
     private int instante;
+    private ArrayList<String> mensagens;
+    private JTextArea console;
 
-    public Sistema(int maximoAndares, String arquivoInstantes, ArrayList<Elevador> elevadores, ArrayList<Andar> andares) {
+    public Sistema(int maximoAndares, String arquivoInstantes, ArrayList<Elevador> elevadores, ArrayList<Andar> andares, JTextArea console) {
         this.maximoAndares = maximoAndares;
         this.arq = new Arquivo(arquivoInstantes);
         this.elevadores = elevadores;
         this.andares = andares;
         this.instante = 0;
+        this.mensagens = new ArrayList<>();
+        this.console = console;
     }
 
-    public void gerenciar(){
+    public ArrayList<String> gerenciar(){
+        mensagens.clear();
+
+        System.out.println("----------------------------------------------------| Instante " + instante);
         //Adicionando Pessoas nos Andares
         addPessoasEmAndares();
         //disparo elevadores que estão parados
         gerenciarElevadores();
 
         instante++;
+
+        mensagens.forEach(s -> {
+            console.append(s);
+        });
+
+        return mensagens;
     }
 
     /**
@@ -33,7 +48,6 @@ public class Sistema {
      * Adiciona essas pessoas nas filas dos determinados Andares.
      */
     private void addPessoasEmAndares(){
-        System.out.println("----------------------------------------------------| Instante " + instante);
         //Lista com Pessoas que entrarão na fila
         ArrayList<Pessoa> pessoas = arq.proximoInstante(instante);
 
@@ -60,33 +74,37 @@ public class Sistema {
         andares.forEach(andar -> {
             elevadores.forEach(elevador -> {
 
+
                 //Verifica se elevador está passando ou parado em algum andar
                 if(elevador.getPosY() == andar.getPosY()) {
 
-                    elevador.setAndarAtual(andar.getAndar());
-
-                    //System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
+                    int filaSaida = 0;
+                    int filaEntrando = 0;
 
                     //verificando se pessoas querem descer no andar atual
                     //se sim, será removido e porta fica aberta
-                    elevador.removePessoas(andar.getAndar());
+
+                    elevador.setAndarAtual(andar.getAndar());
+
+                    filaSaida = elevador.removePessoas(andar.getAndar());
 
                     //se parou em andar que possui fila
                     if (elevador.isPortaAberta() && andar.fila()) {
-                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        filaEntrando= filaEntrando + elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
                     //se está descendo e tiver fila no andar
                     else if (elevador.isDescendo() && andar.fila()) {
-                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        filaEntrando= filaEntrando + elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
                     //se ta subindo e não está carregando ninguém
                     else if (!elevador.isDescendo() && !elevador.fila()) {
-                        elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
+                        filaEntrando= filaEntrando + elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
                     System.out.println("Fila elevador: " + elevador.filaTamanho());
+
                     //se tem alguem no elevador
                     if(!elevador.fila()) {
                         elevador.viajar(0);
@@ -97,10 +115,12 @@ public class Sistema {
                     }else{
                         elevador.viajar(2);
                     }
-                    //System.out.println(" - FilaELevador: " + elevador.filaTamanho());
+
+                    String mensagemElevador = "Elevador " + elevador.getNumero() + ": andar " + andar.getAndar() + ", entraram " + filaEntrando + ", sairam " + filaSaida;
+                    mensagens.add(mensagemElevador);
                 }
+
             });
-            if(andar.getAndar() == 4) System.out.println("Andar " + andar.getAndar() + " : " + andar.filaTamanho());
             andar.carregarImagem();
         });
 
@@ -111,7 +131,6 @@ public class Sistema {
                 for (int i = 0; i < elevadores.size(); i++) {
                     Elevador e = elevadores.get(i);
                     if(e.isDisponivel()){
-                        System.out.println("Elevador " + (i+1) + " disponivel");
                         if(andar.getPosY() < e.getPosY()){
                             e.viajar(1);
                         }else{

@@ -17,8 +17,9 @@ public class Elevador extends Elemento{
     private int andarAtual;
     private String IMAGEM_PORTA_ABERTA = "elevadorAberto.png";
     private String IMAGEM_PORTA_FECHADA = "elevadorFechado.png";
+    private int numero;
 
-    public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade) {
+    public Elevador(Tela pai, String imagemNome, int posX, int posY, int velocidade, int capacidade, int numero) {
         super(pai, imagemNome, posX, posY);
         this.pessoas = new ArrayList<>();
         this.velocidade = velocidade;
@@ -29,7 +30,10 @@ public class Elevador extends Elemento{
         this.disponivel = true;
         this.numeroViagens = 0;
         this.andarAtual = 0;
+        this.numero = numero;
     }
+
+    public int getNumero() { return numero; }
 
     public void setAndarAtual(int andarAtual){ this.andarAtual = andarAtual; }
 
@@ -49,20 +53,20 @@ public class Elevador extends Elemento{
 
     public int lugaresLivres(){ return capacidadeMaxima - capacidadeAtual; }
 
-    public void addPessoas(ArrayList<Pessoa> entrando){
+    public int addPessoas(ArrayList<Pessoa> entrando){
         System.out.println("Saindo do Andar: " + entrando.size());
         if(entrando.size() > 0) setPortaAberta(true);
         capacidadeAtual = capacidadeAtual+entrando.size();
         this.pessoas.addAll(entrando);
+        return entrando.size();
     }
 
-    public void removePessoas(int andarAtual) {
+    public int removePessoas(int andarAtual) {
         ArrayList<Pessoa> saindo = new ArrayList<>();
         int quantidade = pessoas.size();
         int i = 0;
         while(quantidade > 0){
             Pessoa p = pessoas.get(i);
-            System.out.println("Andar destino " + p.getAndarDestino());
             if(p.getAndarDestino() == andarAtual){
                 saindo.add(this.pessoas.remove(i));
             }else i++;
@@ -73,8 +77,7 @@ public class Elevador extends Elemento{
             numeroViagens++;
             setPortaAberta(true);
         }
-
-        System.out.println("Saiu Elevador: " + saindo.size());
+        return saindo.size();
     }
 
     /**

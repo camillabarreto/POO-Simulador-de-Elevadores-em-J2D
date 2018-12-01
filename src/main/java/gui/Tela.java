@@ -82,13 +82,13 @@ public class Tela extends JPanel implements ActionListener {
         //Criando elevadores
         ArrayList<Elevador> elevadores = new ArrayList<>();
         for (int i = 0; i < QUANTIDADE_ELEVADORES; i++) { //carrov.png
-            Elevador e = new Elevador(this, "elevadorAberto.png", 100*(i+1), 600, 1+i, 4+(i*2));
+            Elevador e = new Elevador(this, "elevadorAberto.png", 100*(i+1), 600, 1+i, 4+(i*2), i+1);
             elementos.add(e);
             elevadores.add(e);
             atualizaElevador[i] = new ThreadElevadores(e, this);
         }
 
-        Sistema s = new Sistema(QUANTIDADE_ANDARES, ARQUIVO_DE_INSTANTES, elevadores, andares);
+        Sistema s = new Sistema(QUANTIDADE_ANDARES, ARQUIVO_DE_INSTANTES, elevadores, andares, console);
         this.atualizaSistema = new ThreadSistema(s, this);
 
     }
