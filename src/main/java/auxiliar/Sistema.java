@@ -63,6 +63,8 @@ public class Sistema {
                 //Verifica se elevador está passando ou parado em algum andar
                 if(elevador.getPosY() == andar.getPosY()) {
 
+                    elevador.setAndarAtual(andar.getAndar());
+
                     //System.out.println("Elevador " + elevador.getVelocidade() + " - Passando pelo andar" + andar.getAndar());
 
                     //verificando se pessoas querem descer no andar atual
@@ -84,6 +86,7 @@ public class Sistema {
                         elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
+                    System.out.println("Fila elevador: " + elevador.filaTamanho());
                     //se tem alguem no elevador
                     if(!elevador.fila()) {
                         elevador.viajar(0);
@@ -91,20 +94,19 @@ public class Sistema {
                         elevador.viajar(1);
                     }else if(andar.getAndar() == maximoAndares-1){
                         elevador.viajar(-1);
+                    }else{
+                        elevador.viajar(2);
                     }
                     //System.out.println(" - FilaELevador: " + elevador.filaTamanho());
                 }
             });
-            System.out.println("Andar " + andar.getAndar() + " : " + andar.filaTamanho());
+            if(andar.getAndar() == 4) System.out.println("Andar " + andar.getAndar() + " : " + andar.filaTamanho());
             andar.carregarImagem();
         });
 
-        //nesse ponto já saiu quem tinha que sair, ja entrou quem tinha que entrar
-        //precisamos verificar se ainda existe fila nos andares
-        //se existir, o elevador mais próximo deve ser chamado
-
+        //se tiver elevador livre, manda ele se deslocar para direção do andar que tem fila
+        //se elevador ocupado
         andares.forEach(andar -> {
-            //se tem fila no andar, verificar se tem elevadores disponiveis
             if(andar.fila()){
                 for (int i = 0; i < elevadores.size(); i++) {
                     Elevador e = elevadores.get(i);
@@ -112,12 +114,15 @@ public class Sistema {
                         System.out.println("Elevador " + (i+1) + " disponivel");
                         if(andar.getPosY() < e.getPosY()){
                             e.viajar(1);
-                        }else e.viajar(-1);
+                        }else{
+                            e.viajar(-1);
+                        }
                         break;
-                    }else System.out.println("Elevador " + (i+1) + " NÃO disponivel");
+                    }
                 }
             }
         });
+
     }
 
 }

@@ -14,6 +14,7 @@ public class Elevador extends Elemento{
     private boolean portaAberta;
     private boolean disponivel;
     private int numeroViagens;
+    private int andarAtual;
     private String IMAGEM_PORTA_ABERTA = "elevadorAberto.png";
     private String IMAGEM_PORTA_FECHADA = "elevadorFechado.png";
 
@@ -27,7 +28,10 @@ public class Elevador extends Elemento{
         this.portaAberta = true;
         this.disponivel = true;
         this.numeroViagens = 0;
+        this.andarAtual = 0;
     }
+
+    public void setAndarAtual(int andarAtual){ this.andarAtual = andarAtual; }
 
     public boolean isDisponivel(){ return disponivel; }
 
@@ -45,43 +49,56 @@ public class Elevador extends Elemento{
 
     public int lugaresLivres(){ return capacidadeMaxima - capacidadeAtual; }
 
-    public void addPessoas(ArrayList<Pessoa> pessoas){
-        if(pessoas.size() > 0) setPortaAberta(true);
-        capacidadeAtual = capacidadeAtual+pessoas.size();
-        this.pessoas.addAll(pessoas);
+    public void addPessoas(ArrayList<Pessoa> entrando){
+        System.out.println("Saindo do Andar: " + entrando.size());
+        if(entrando.size() > 0) setPortaAberta(true);
+        capacidadeAtual = capacidadeAtual+entrando.size();
+        this.pessoas.addAll(entrando);
     }
 
-    public boolean removePessoas(int andarAtual) {
-        ArrayList<Pessoa> saida = new ArrayList<>();
-        for (int i = 0; i < pessoas.size(); i++) {
+    public void removePessoas(int andarAtual) {
+        ArrayList<Pessoa> saindo = new ArrayList<>();
+        int quantidade = pessoas.size();
+        int i = 0;
+        while(quantidade > 0){
             Pessoa p = pessoas.get(i);
+            System.out.println("Andar destino " + p.getAndarDestino());
             if(p.getAndarDestino() == andarAtual){
-                saida.add(this.pessoas.remove(i));
-            }
+                saindo.add(this.pessoas.remove(i));
+            }else i++;
+            quantidade--;
         }
-
-        if(saida.size() > 0){
-            capacidadeAtual = capacidadeAtual-saida.size();
+        if(saindo.size() > 0){
+            capacidadeAtual = capacidadeAtual-saindo.size();
             numeroViagens++;
             setPortaAberta(true);
         }
-        return false;
+
+        System.out.println("Saiu Elevador: " + saindo.size());
     }
 
     /**
      * posiçãoAtual = -0, elevador deve ficar parado
-     * @param posiçãoAndar: '0' elevador parado, '1' elevador sobe, '-1' elevador desce
+     * @param direção: '0' elevador parado, '1' elevador sobe, '-1' elevador desce, '2' elevador verificar sua fila
      */
-    public void viajar(int posiçãoAndar) {
-
+    public void viajar(int direção) {
         //verificar essa logica aqui porque ta dando conflito
-        if(posiçãoAndar == 0){
+
+        if(direção == 2){
+            int aux = -1;
+            for (int i = 0; i < pessoas.size(); i++) {
+                if(pessoas.get(i).getAndarDestino() > andarAtual){
+                    aux = 1;
+                    break;
+                }
+            }viajar(aux);
+        }else if(direção == 0){
             disponivel = true;
             setPortaAberta(true);
         }else{
             disponivel = false;
             setPortaAberta(false);
-            if(posiçãoAndar == -1){
+            if(direção == -1){
                 this.descendo = true;
             }else{
                 this.descendo = false;
