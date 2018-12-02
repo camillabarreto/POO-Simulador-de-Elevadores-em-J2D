@@ -27,6 +27,8 @@ public class Sistema {
 
     public ArrayList<String> gerenciar(){
         mensagens.clear();
+        String mensagemElevador = "INSTANTE " + instante + "----------------\n";
+        mensagens.add(mensagemElevador);
 
         System.out.println("----------------------------------------------------| Instante " + instante);
         //Adicionando Pessoas nos Andares
@@ -116,7 +118,7 @@ public class Sistema {
                         elevador.viajar(2);
                     }
 
-                    String mensagemElevador = "Elevador " + elevador.getNumero() + ": andar " + andar.getAndar() + ", entraram " + filaEntrando + ", sairam " + filaSaida;
+                    String mensagemElevador = "Elevador " + elevador.getNumero() + ": andar " + andar.getAndar() + ", entraram " + filaEntrando + ", sairam " + filaSaida + "\n";
                     mensagens.add(mensagemElevador);
                 }
 
@@ -142,6 +144,15 @@ public class Sistema {
             }
         });
 
+    }
+
+    public void relatorioFinal(){
+        String mensagem = "Número de viagens";
+        for (int i = 0; i < elevadores.size(); i++) {
+            mensagem = "\nElevador " + i + ": " + elevadores.get(i).getNumeroViagens();
+        }
+        System.out.println(mensagem);
+        this.console.append(mensagem);
     }
 
 }

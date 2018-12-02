@@ -33,6 +33,8 @@ public class Elevador extends Elemento{
         this.numero = numero;
     }
 
+    public int getNumeroViagens() { return numeroViagens; }
+
     public int getNumero() { return numero; }
 
     public void setAndarAtual(int andarAtual){ this.andarAtual = andarAtual; }

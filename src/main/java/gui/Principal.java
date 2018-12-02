@@ -50,40 +50,12 @@ public class Principal {
                 }else {
                     ((Tela) painelEsquerdo).pararTimer();
                     iniciarButton.setText("Iniciar");
-
-                    carregarArquivoButton.setEnabled(true);
-                    desceButton.setEnabled(false);
-
                     console.append("->Parou\n");
                 }
 
                 // devolvendo o foco para o painel Tela capturar as teclas
                 ((Tela)painelEsquerdo).requestFocus();
 
-            }
-        });
-
-        /**
-         * Exemplo de como usar o JFileChooser para selecionar um arquivo no sistema de arquivos
-         */
-        carregarArquivoButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                JFileChooser fc = new JFileChooser();
-                int retorno = fc.showOpenDialog(painelPrincipal);
-
-
-                // se um arquivo foi selecionado
-                if (retorno == JFileChooser.APPROVE_OPTION) {
-                    File arquivo = fc.getSelectedFile();
-                    JOptionPane.showMessageDialog(painelPrincipal, arquivo.getName(), "O arquivo selecionado foi:", JOptionPane.INFORMATION_MESSAGE);
-
-                    console.append("Arquivo " + arquivo.getName() + " foi carregado");
-                }
-
-                // devolvendo o foco para o painel Tela poder capturar as teclas
-                ((Tela)painelEsquerdo).requestFocus();
             }
         });
     }

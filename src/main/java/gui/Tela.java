@@ -66,10 +66,6 @@ public class Tela extends JPanel implements ActionListener {
         this.atualizaElevador = new Thread[QUANTIDADE_ELEVADORES];
     }
 
-
-    /**
-     *
-     */
     public void criarElementos(){
         //Criando andares
         elementos.clear();
@@ -95,7 +91,7 @@ public class Tela extends JPanel implements ActionListener {
 
     /**
      * Quando a simulação é iniciada cria-se os elementos, dispara o Timer para redesenho da tela periodicamente e
-     * dispara a Thread que será responsável por atualizar as coordenadas do OutroCarro
+     * dispara a Threads que serão responsáveis por atualizar as coordenadas dos elementos
      */
     public void iniciaSimulacao(){
         this.setIgnoreRepaint(true);
@@ -187,6 +183,8 @@ public class Tela extends JPanel implements ActionListener {
      */
     public void pararTimer() {
 
+        sistema.relatorioFinal();
+
         // Interrompe o timer que atualiza a tela
         this.timer.stop();
 
@@ -196,14 +194,10 @@ public class Tela extends JPanel implements ActionListener {
 
         ((ThreadSistema)this.atualizaSistema).setExecutando(false);
 
-
         this.setIgnoreRepaint(false);
 
         // Desenha a última posição dos elementos
         this.renderizar();
-
-        // Interrompe a Thread que estava atualizando as coordenadas do OutroCarro
-        //((ExemploDeThread)this.atualizaUmCarroViaThread).setExecutando(false);
     }
 
     /**
