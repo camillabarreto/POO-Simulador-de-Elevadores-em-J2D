@@ -2,7 +2,6 @@ package gui;
 
 import elementos.Carro;
 import elementos.Elemento;
-import util.Teclado;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -32,8 +31,6 @@ public class Principal {
     private JPanel cima;
     private JButton carregarArquivoButton;
     private JButton desceButton;
-
-    private Teclado teclado;
 
     public Principal() {
 
@@ -93,14 +90,10 @@ public class Principal {
 
     private void createUIComponents() {
 
-        this.teclado = new Teclado();
-
         painelPrincipal = new JPanel();
         console = new JTextArea();
 
         painelEsquerdo = new Tela(console);
-        painelEsquerdo.addKeyListener(teclado);
-        painelPrincipal.addKeyListener(teclado);
     }
 
 

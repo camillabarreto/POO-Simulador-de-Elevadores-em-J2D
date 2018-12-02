@@ -125,17 +125,6 @@ public class Tela extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        // Atualiza as coordenadas dos elementos, respeitando a lógica de cada um
-        //this.processarLogica();
-
-        //sistema.gerenciar();
-        //sistema.atualizarElevadores();
-
-//        elementos.forEach(elemento-> {
-//            elemento.atualizar();
-//        });
-
         // desenha os elementos na tela novamente
         this.renderizar();
     }
@@ -157,13 +146,9 @@ public class Tela extends JPanel implements ActionListener {
 
 
         // desenhando os elementos na tela
-        //elementos.forEach(elemento -> elemento.desenhar(g2));
         elementos.forEach(elemento-> {
             elemento.desenhar(g2);
         });
-//        sistema.getAndares().forEach(andar -> {
-//            andar.desenhar(g2);
-//        });
 
         //liberando os contextos gráficos
         g2.dispose();
@@ -171,14 +156,13 @@ public class Tela extends JPanel implements ActionListener {
 
 
     /**
-     * O cenário de fundo tem elementos estáticos. Aqui um pequeno auxiliar de como desenhar retângulo,
-     * mas é possível desenhar imagens, elipse, string, etc.
+     * O cenário de fundo tem elementos estáticos
      *
      */
     public void renderizarCenario(){
         Graphics2D g2 = (Graphics2D) this.getGraphics();
 
-        // desenhando retângulos que poderiam ser janelas?
+        // desenhando as linhas que separam os andares
         g2.setColor(Color.darkGray);
         g2.drawLine(0, 90, getWidth(), 90);
         g2.drawLine(0, 210, getWidth(), 210);
@@ -186,6 +170,15 @@ public class Tela extends JPanel implements ActionListener {
         g2.drawLine(0, 450, getWidth(), 450);
         g2.drawLine(0, 570, getWidth(), 570);
         g2.drawLine(0, 690, getWidth(), 690);
+
+        int aux = 0;
+        for (int i = 0; i < elementos.size(); i++) {
+            if(elementos.get(i) instanceof Andar){
+                g2.drawString(Integer.toString(((Andar) elementos.get(i)).filaTamanho()), 50, 80+(120*aux));
+                aux++;
+            }
+        }
+
         g2.dispose();
     }
 

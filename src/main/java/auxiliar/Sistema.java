@@ -94,7 +94,7 @@ public class Sistema {
                     }
 
                     //se está descendo e tiver fila no andar
-                    else if (elevador.isDescendo() && andar.fila()) {
+                    else if ((elevador.isDescendo() && andar.fila()) && (elevador.lugaresLivres() > 0)) {
                         filaEntrando= filaEntrando + elevador.addPessoas(andar.removePessoas(elevador.lugaresLivres()));
                     }
 
